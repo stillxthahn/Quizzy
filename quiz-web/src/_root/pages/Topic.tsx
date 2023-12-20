@@ -6,6 +6,7 @@ type ITopic = {
     "id": string;
     "name": string;
 }
+
 const Topic = () => {
     const navigate = useNavigate()
     const [topicList, setTopicList] = useState([])

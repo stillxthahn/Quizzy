@@ -8,6 +8,7 @@ import Home from './_root/pages/Home'
 import Topic from './_root/pages/Topic'
 import Answers from './_root/pages/Answers'
 import Quiz from './_root/pages/Quiz'
+import AnswerDetails from './_root/pages/AnswerDetails'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/topic" element={<Topic />} />
           <Route path="/answers" element={<Answers />} />
           <Route path="/topic/:id" element={<Quiz />} />
+          <Route path="/answers/:id" element={<AnswerDetails />} />
         </Route>
       </Routes >
     </main>

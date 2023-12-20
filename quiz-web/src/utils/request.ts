@@ -1,9 +1,16 @@
 const DOMAIN = "http://localhost:3002"
 
 export const get = async (api: string) => {
-    const response = await fetch(DOMAIN + api)
-    const result = await response.json()
-    return result;
+    try {
+        const response = await fetch(DOMAIN + api)
+        if (!response.ok) {
+            return response 
+        }
+        const result = await response.json()
+        return result;
+    } catch (error: any) {
+        throw new Error(error.statusText)
+    }
 }
 
 export const post = async (data: object) => {

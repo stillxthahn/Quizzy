@@ -2,36 +2,42 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getQuestionByTopicID } from "../../service/questionService"
 import { Button, Form, Radio, Space } from "antd";
-import { getUserList } from "../../service/userService";
 import { createUserAnswers } from "../../service/answerService";
-
-type IQuestion = {
-    "id": string;
-    "topicId": string;
-    "question": string;
-    "answers": Array<string>;
-    "correctAnswer": string;
-}
-type IUser = {
-    "email": string;
-    "fullname": string;
-    "id": string;
-    "password": string;
-    "token": string;
-}
+import { IQuestion } from "../../types";
+import { useUserContext } from "../../context/AuthContext";
 
 
 const Quiz = () => {
+    const currentUser = useUserContext()
     const param = useParams()
+    console.log(currentUser)
     const [questionsList, setQuestionsList] = useState([])
-    const [userList, setUserList] = useState([])
+    const fetchQuestionsList = async () => {
+        try {
+            const result = await getQuestionByTopicID(param.id || "");
+            setQuestionsList(result);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+
+        if (param.id) {
+            fetchQuestionsList()
+        }
+    }, [])
+    console.log(questionsList)
     const onFinish = async (values: any) => {
-        const token = localStorage.getItem("token")
-        const currentUser = userList.find((user: IUser) => user.token === token)
-        const answers = Object.values(values).filter((value) => value !== undefined).map((value, index) => ({
-            questionId: index + 1, answer: value
+        const answers = Object.values(values).map((value, index) => ({
+            questionId: index + 1,
+            answer: value ? value : -1,
+            isCorrect: value && questionsList[index]["correctAnswer"] === value ? 1 : 0
         }))
-        if (currentUser && answers) {
+        console.log(typeof (answers[0]["questionId"]))
+        console.log(typeof (answers[0]["answer"]))
+        console.log(typeof (answers[0]["isCorrect"]))
+
+        if (answers.length > 0 && currentUser["id"] !== "") {
             const result = await createUserAnswers({
                 "userId": currentUser["id"],
                 "topicId": Number.parseInt(param.id || ""),
@@ -45,18 +51,7 @@ const Quiz = () => {
         }
     }
 
-    useEffect(() => {
-        const fetchQuestionsList = async () => {
-            const result = await getQuestionByTopicID(param.id || "")
-            setQuestionsList(result)
-        }
-        const fetchUserList = async () => {
-            const userList = await getUserList()
-            setUserList(userList)
-        }
-        fetchUserList()
-        fetchQuestionsList()
-    }, [])
+
     return (
         <Form
             onFinish={onFinish} layout="vertical"
@@ -77,7 +72,7 @@ const Quiz = () => {
                 </Form.Item >
             ))}
             <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button htmlType="submit">
                     Submit
                 </Button>
             </Form.Item>

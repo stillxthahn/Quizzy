@@ -26,6 +26,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             fetchCurrentUser(token)
         }
         else {
+            console.log("to sigin")
             navigate("/sign-in")
         }
     }, [])

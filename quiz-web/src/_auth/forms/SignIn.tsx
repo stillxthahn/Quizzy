@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd';
 import { getUser } from '../../service/userService';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // type IUser = {
 //     "id": string;
@@ -17,6 +17,7 @@ type FieldType = {
 };
 
 const SignIn = () => {
+    console.log("123")
     const navigate = useNavigate()
     const onFinish = async (values: any) => {
 
@@ -35,37 +36,39 @@ const SignIn = () => {
         console.log('Failed:', errorInfo);
     };
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-        >
-            <Form.Item<FieldType>
-                label="Email"
-                name="email"
-                rules={[{ required: true, message: 'Please input your email!' }]}
+        <>
+            <Form
+                name="basic"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                style={{ maxWidth: 600 }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
             >
-                <Input />
-            </Form.Item>
+                <Form.Item<FieldType>
+                    label="Email"
+                    name="email"
+                    rules={[{ required: true, message: 'Please input your email!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-            <Form.Item<FieldType>
-                label="Password"
-                name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-                <Input.Password />
-            </Form.Item>
+                <Form.Item<FieldType>
+                    label="Password"
+                    name="password"
+                    rules={[{ required: true, message: 'Please input your password!' }]}
+                >
+                    <Input.Password />
+                </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                    Sign In
-                </Button>
-            </Form.Item>
-        </Form>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                    <Button type="primary" htmlType="submit">
+                        Sign In
+                    </Button>
+                </Form.Item>
+            </Form>
+        </>
     )
 }
 
